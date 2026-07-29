@@ -202,6 +202,33 @@ def check_quality():
         check(str(path.relative_to(ROOT)), not hits, f"emoji used as UI: {hits[:3]}")
 
 
+# ---------------------------------------------------------------------------
+# 8. No filters on render/image_tag arguments
+#    Liquid rejects `{% render 'x', alt: a | default: b %}` — the filter must be
+#    applied in an {% assign %} first. Caught the hard way; now it's automated.
+# ---------------------------------------------------------------------------
+RENDER_TAG_RE = re.compile(r"\{%-?\s*render\s+'[a-z0-9_-]+'\s*(,[^%]*?)-?%\}", re.S)
+
+
+def check_filter_args():
+    for path in sorted(ROOT.rglob("*.liquid")):
+        if ".git" in path.parts:
+            continue
+        rel = str(path.relative_to(ROOT))
+        body = path.read_text(encoding="utf-8")
+
+        for args in RENDER_TAG_RE.findall(body):
+            check(rel, "|" not in args,
+                  f"filter used on a render argument — assign it first: {args.strip()[:70]}")
+
+        # image_tag named args have the same restriction.
+        for block in re.findall(r"\|\s*image_tag:(.*?)\}\}", body, re.S):
+            offenders = [line.strip() for line in block.split(",")
+                         if "|" in line and ":" in line]
+            check(rel, not offenders,
+                  f"filter used on an image_tag argument: {offenders[:1]}")
+
+
 def main():
     check_json_files()
     check_section_schemas()
@@ -210,6 +237,7 @@ def main():
     check_balance()
     check_required()
     check_quality()
+    check_filter_args()
 
     print(f"Noctairre theme check — {CHECKED} assertions")
 

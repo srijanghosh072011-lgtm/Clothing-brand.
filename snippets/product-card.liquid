@@ -8,6 +8,9 @@
   assign delay = index | default: 0 | modulo: 4
   assign show_sizes = show_sizes | default: true, allow_false: true
 
+  assign card_alt = product.featured_image.alt | default: product.title
+  assign card_label = product.type | default: 'Noctairre'
+
   assign size_option = null
   for opt in product.options_with_values
     assign lowered = opt.name | downcase
@@ -37,8 +40,8 @@
         image: product.featured_image,
         ratio: r,
         sizes: sizes,
-        label: product.type,
-        alt: product.featured_image.alt | default: product.title
+        label: card_label,
+        alt: card_alt
       %}
     </a>
   </div>

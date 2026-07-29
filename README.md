@@ -118,14 +118,22 @@ legal/POLICIES.md            policy drafts to paste into Shopify
 
 ## Before every push
 
+Run both. They catch different things.
+
 ```bash
-python3 check_theme.py
+python3 check_theme.py     # structure, wiring, accessibility guarantees
+shopify theme check        # Shopify's own Liquid linter
 ```
 
-It checks that every JSON file parses, every section schema is valid, every
-template references a section that exists, every `{% render %}` resolves to a
-real snippet, Liquid tags are balanced, and the accessibility guarantees
+`check_theme.py` verifies that every JSON file parses, every section schema is
+valid, every template references a section that exists, every `{% render %}`
+resolves to a real snippet, Liquid tags are balanced, no filters are applied to
+`render`/`image_tag` arguments, and the accessibility guarantees
 (reduced-motion, focus states, no emoji icons, no `100vh`) still hold.
+
+`shopify theme check` understands Liquid semantics and catches things a regex
+cannot. Currently it reports **0 errors and 3 warnings** — all three are the
+Google Fonts link, which is intentional (see the limitations table above).
 
 ---
 
@@ -151,7 +159,7 @@ Almost everything is editable in **Online Store → Themes → Customize**:
 | Product image gallery with thumbnails | You have real photography. Right now every PDP shows a stacked grid, which suits editorial imagery better anyway. |
 | Drop countdowns / waitlists | You move to timed releases. Bolts on as one section. |
 | Customer account templates | You enable accounts — Shopify's defaults work until then. |
-| Self-hosted fonts | You want the last ~100ms of load time. Currently Google Fonts with preconnect. |
+| Self-hosted fonts | You add a font subsetting step. `shopify theme check` warns about the Google Fonts link — ignore it here. Zen Kaku Gothic New is a Japanese face; unsubsetted it is multiple megabytes, and Google serves it in ~100 `unicode-range` chunks so a browser downloads only the glyphs actually on the page. Naively self-hosting it would be a large regression, not a win. |
 | Multi-currency / language toggle | You sell outside Canada in volume. |
 
 ---

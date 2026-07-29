@@ -1,5 +1,6 @@
 {%- liquid
   assign current = product.selected_or_first_available_variant
+  assign fallback_label = product.type | default: 'Noctairre'
 -%}
 
 <div class="container">
@@ -8,6 +9,7 @@
     <div class="pdp__media">
       {%- if product.media.size > 0 -%}
         {%- for media in product.media limit: 5 -%}
+          {%- assign media_alt = media.alt | default: product.title -%}
           <div class="bezel">
             <div class="bezel__core">
               {% render 'placeholder-media',
@@ -15,7 +17,7 @@
                 ratio: 'portrait',
                 sizes: '(min-width: 900px) 55vw, 100vw',
                 eager: forloop.first,
-                alt: media.alt | default: product.title
+                alt: media_alt
               %}
             </div>
           </div>
@@ -26,7 +28,7 @@
             <div class="bezel__core">
               {% render 'placeholder-media',
                 ratio: 'portrait',
-                label: product.type | default: 'Noctairre'
+                label: fallback_label
               %}
             </div>
           </div>

@@ -12,12 +12,18 @@
 {%- endcomment -%}
 
 {%- liquid
+  comment
+    Every value must be resolved here — Liquid does not allow filters on the
+    named arguments of image_tag or render.
+  endcomment
   assign r = ratio | default: 'portrait'
   assign sz = sizes | default: '(min-width: 900px) 33vw, 100vw'
   assign load = 'lazy'
   if eager
     assign load = 'eager'
   endif
+  assign alt_text = alt | default: image.alt | escape
+  assign ph_label = label | default: 'Noctairre product image coming soon' | escape
 -%}
 
 <div class="frame frame--{{ r }}">
@@ -29,11 +35,11 @@
         loading: load,
         sizes: sz,
         widths: '320, 480, 640, 840, 1080, 1400, 1600',
-        alt: alt | default: image.alt | escape,
+        alt: alt_text,
         class: 'frame__img'
     }}
   {%- else -%}
-    <div class="ph" role="img" aria-label="{{ label | default: 'Noctairre product image coming soon' | escape }}">
+    <div class="ph" role="img" aria-label="{{ ph_label }}">
       <span class="ph__mark kanji" aria-hidden="true">夜</span>
       {%- if label != blank -%}
         <span class="ph__label" aria-hidden="true">{{ label }}</span>
