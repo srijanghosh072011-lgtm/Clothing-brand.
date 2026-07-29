@@ -1,0 +1,20 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "heading_one": "Shop",
+        "menu_one": "footer-shop",
+        "heading_two": "Help",
+        "menu_two": "footer-help",
+        "heading_three": "Legal",
+        "menu_three": "footer-legal",
+        "tagline": "Made for the hours after dark",
+        "wordmark": "NOCTAIRRE"
+      }
+    }
+  },
+  "order": ["footer"]
+}

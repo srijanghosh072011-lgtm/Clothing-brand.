@@ -1,0 +1,7 @@
+{%- comment -%}
+  Film grain. Fixed + pointer-events:none — attaching this to a scrolling
+  container is what makes grain overlays tank mobile frame rates.
+{%- endcomment -%}
+{%- if settings.enable_grain -%}
+  <div class="grain" aria-hidden="true"></div>
+{%- endif -%}

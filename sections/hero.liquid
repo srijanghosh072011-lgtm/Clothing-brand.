@@ -1,0 +1,91 @@
+<section class="hero" data-hero>
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  {%- if section.settings.image != blank -%}
+    <div class="look__media" aria-hidden="true">
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '640, 960, 1400, 1900, 2400', alt: ''
+      }}
+      <div class="look__scrim"></div>
+    </div>
+  {%- endif -%}
+
+  <span class="hero__kanji kanji" aria-hidden="true">{{ section.settings.kanji | default: '夜' }}</span>
+
+  <div class="hero__inner">
+    <div class="hero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">
+          <span class="kanji" aria-hidden="true">{{ section.settings.eyebrow_kanji | default: '黒' }}</span>
+          {{ section.settings.eyebrow }}
+        </span>
+      {%- endif -%}
+
+      <h1 class="hero__wordmark">
+        {%- assign lines = section.settings.heading | newline_to_br | split: '<br />' -%}
+        {%- for line in lines -%}
+          <span class="mask-line"><span>{{ line | strip }}</span></span>
+        {%- endfor -%}
+      </h1>
+
+      <div class="hero__meta">
+        {%- if section.settings.subheading != blank -%}
+          <p class="lede">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
+          {%- if section.settings.cta_label != blank -%}
+            <a class="btn btn--lg" href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}">
+              <span>{{ section.settings.cta_label }}</span>
+              <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.cta_two_label != blank -%}
+            <a class="btn btn--lg btn--ghost" href="{{ section.settings.cta_two_url }}">
+              <span>{{ section.settings.cta_two_label }}</span>
+              <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+            </a>
+          {%- endif -%}
+        </div>
+
+        <span class="hero__scroll" aria-hidden="true">
+          <i></i>
+          Scroll
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label", "default": "Autumn / Winter — Collection 01" },
+    { "type": "text", "id": "eyebrow_kanji", "label": "Eyebrow kanji", "default": "黒" },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Wordmark",
+      "default": "Noctairre",
+      "info": "Each new line animates up separately."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Supporting line",
+      "default": "Heavyweight garments cut for the hours after dark. Washed black, distressed by hand, made in small runs."
+    },
+    { "type": "text", "id": "kanji", "label": "Background kanji", "default": "夜" },
+    { "type": "text", "id": "cta_label", "label": "Primary button", "default": "Shop the collection" },
+    { "type": "url", "id": "cta_url", "label": "Primary link" },
+    { "type": "text", "id": "cta_two_label", "label": "Secondary button", "default": "Lookbook" },
+    { "type": "url", "id": "cta_two_url", "label": "Secondary link" },
+    { "type": "image_picker", "id": "image", "label": "Background image", "info": "Optional. Leave empty for the void-black treatment." }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

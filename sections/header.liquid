@@ -1,0 +1,103 @@
+{%- comment -%}
+  Floating glass island nav — detached from the top edge, never glued to it.
+  backdrop-filter is safe here because the element is fixed, not scrolling.
+{%- endcomment -%}
+
+<header class="header" data-header>
+  <div class="header__island">
+    <a class="header__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }} — home">
+      <span class="kanji" aria-hidden="true">夜</span>
+      <span>{{ section.settings.wordmark | default: shop.name }}</span>
+    </a>
+
+    <nav class="header__nav" aria-label="Primary">
+      {%- for link in section.settings.menu.links -%}
+        <a
+          href="{{ link.url }}"
+          {% if link.active %}
+            aria-current="page"
+          {% endif %}
+        >
+          {{- link.title -}}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="header__tools">
+      <a class="icon-btn" href="{{ routes.search_url }}" aria-label="Search">
+        {% render 'icon', name: 'search' %}
+      </a>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="icon-btn" href="{{ routes.account_url }}" aria-label="Account">
+          {% render 'icon', name: 'user' %}
+        </a>
+      {%- endif -%}
+
+      <button class="icon-btn" type="button" data-cart-open aria-label="Open bag">
+        {% render 'icon', name: 'bag' %}
+        <span
+          class="cart-count"
+          data-cart-count
+          {% if cart.item_count == 0 %}
+            hidden
+          {% endif %}
+        >
+          {{- cart.item_count -}}
+        </span>
+      </button>
+
+      <button
+        class="burger"
+        type="button"
+        data-burger
+        aria-expanded="false"
+        aria-controls="site-menu"
+        aria-label="Open menu"
+      >
+        <span class="burger__box" aria-hidden="true">
+          <span class="burger__bar"></span>
+          <span class="burger__bar"></span>
+          <span class="burger__bar"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="site-menu" data-menu>
+  <nav aria-label="Mobile">
+    <ul class="menu__list">
+      {%- for link in section.settings.menu.links -%}
+        <li class="menu__item"><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+
+  <div class="menu__foot">
+    <span class="kanji">夜 &nbsp;NOCTAIRRE</span>
+    <span>{{ 'now' | date: '%Y' }}</span>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "wordmark",
+      "label": "Wordmark text",
+      "default": "Noctairre",
+      "info": "Shown next to the 夜 mark. Leave blank to use the store name."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

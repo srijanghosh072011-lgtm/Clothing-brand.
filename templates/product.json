@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": { "show_related": true, "size_guide": "shopify://pages/size-guide" },
+      "blocks": {
+        "fit": {
+          "type": "detail",
+          "settings": {
+            "heading": "Fit & fabric",
+            "body": "<p>Cut oversized and boxy. 480gsm loopback cotton, garment-dyed then washed. Size down one for a standard fit.</p>"
+          }
+        },
+        "ship": {
+          "type": "detail",
+          "settings": {
+            "heading": "Shipping & returns",
+            "body": "<p>Canada 3–7 business days, US 5–10. Unworn pieces with tags can be returned within 30 days.</p>"
+          }
+        },
+        "care": {
+          "type": "detail",
+          "settings": {
+            "heading": "Care",
+            "body": "<p>Cold wash inside out. Hang to dry. The washed finish is meant to fade further with wear.</p>"
+          }
+        }
+      },
+      "block_order": ["fit", "ship", "care"]
+    }
+  },
+  "order": ["main"]
+}

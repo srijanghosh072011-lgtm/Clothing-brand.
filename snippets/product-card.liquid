@@ -1,0 +1,85 @@
+{%- comment -%}
+  Product card.
+  Params: product, ratio, sizes, index (for stagger delay), show_sizes
+{%- endcomment -%}
+
+{%- liquid
+  assign r = ratio | default: 'portrait'
+  assign delay = index | default: 0 | modulo: 4
+  assign show_sizes = show_sizes | default: true, allow_false: true
+
+  assign size_option = null
+  for opt in product.options_with_values
+    assign lowered = opt.name | downcase
+    if lowered contains 'size' or lowered contains 'サイズ'
+      assign size_option = opt
+      assign size_key = 'option' | append: opt.position
+    endif
+  endfor
+-%}
+
+<article class="card reveal" data-delay="{{ delay }}">
+  <div class="card__media">
+    {%- if product.available == false -%}
+      <span class="card__badge">完売 &nbsp;Sold out</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="card__badge">Reduced</span>
+    {%- elsif product.tags contains 'new' -%}
+      <span class="card__badge">新作 &nbsp;New</span>
+    {%- endif -%}
+
+    <a
+      class="card__link"
+      href="{{ product.url }}"
+      aria-label="{{ product.title | escape }} — {{ product.price | money }}"
+    >
+      {% render 'placeholder-media',
+        image: product.featured_image,
+        ratio: r,
+        sizes: sizes,
+        label: product.type,
+        alt: product.featured_image.alt | default: product.title
+      %}
+    </a>
+  </div>
+
+  <div class="card__body">
+    <div>
+      <h3 class="card__title">{{ product.title }}</h3>
+      {%- if product.type != blank -%}
+        <p class="card__sub">{{ product.type }}</p>
+      {%- endif -%}
+    </div>
+
+    <p class="card__price">
+      {%- if product.compare_at_price > product.price -%}
+        <s>{{ product.compare_at_price | money }}</s>
+      {%- endif -%}
+      {{ product.price | money }}
+    </p>
+  </div>
+
+  {%- if show_sizes and size_option -%}
+    <ul class="card__sizes" aria-label="Available sizes">
+      {%- for value in size_option.values -%}
+        {%- liquid
+          comment
+            Match on the exact option slot, never a substring of the variant
+            title — otherwise "S" reports stock whenever "XS" is available.
+          endcomment
+          assign in_stock = false
+          for v in product.variants
+            if v[size_key] == value and v.available
+              assign in_stock = true
+              break
+            endif
+          endfor
+        -%}
+        <li class="card__size{% unless in_stock %} is-out{% endunless %}">
+          {{- value -}}
+          {%- unless in_stock %}<span class="visually-hidden"> — sold out</span>{% endunless -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</article>

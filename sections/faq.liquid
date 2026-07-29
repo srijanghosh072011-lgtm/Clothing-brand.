@@ -1,0 +1,87 @@
+{%- comment -%}
+  FAQ. Answer-first phrasing, real questions — this is the format AI search
+  engines cite most readily. FAQPage schema is emitted only for the Q&As
+  actually rendered on the page.
+{%- endcomment -%}
+
+<section class="section" style="padding-top:clamp(9rem,16vw,13rem)">
+  <div class="container container--tight">
+    <header style="display:flex;flex-direction:column;gap:1.5rem;align-items:flex-start;margin-bottom:3.5rem">
+      <span class="eyebrow"><span class="kanji" aria-hidden="true">問</span> {{ section.settings.eyebrow | default: 'FAQ' }}</span>
+      <h1 class="section-title">{{ section.settings.heading | default: 'Questions' }}</h1>
+    </header>
+
+    <div>
+      {%- for block in section.blocks -%}
+        <div class="accordion" {{ block.shopify_attributes }}>
+          <button
+            class="accordion__trigger"
+            type="button"
+            data-accordion
+            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="faq-{{ block.id }}"
+          >
+            {{ block.settings.question }}
+            {% render 'icon', name: 'plus' %}
+          </button>
+          <div class="accordion__panel" id="faq-{{ block.id }}">
+            <div><div class="accordion__body prose">{{ block.settings.answer }}</div></div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{%- if section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | strip_html | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ block.settings.answer | strip_html | json }}
+            }
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions" }
+  ],
+  "blocks": [
+    {
+      "type": "qa",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "qa", "settings": { "question": "How do Noctairre pieces fit?", "answer": "<p>Everything is cut oversized and boxy. If you want a standard fit, size down one. Exact garment measurements are on every product page and in the size guide.</p>" } },
+        { "type": "qa", "settings": { "question": "How long does shipping take?", "answer": "<p>Canadian orders arrive in 3–7 business days. US orders take 5–10. Tracking is emailed the moment your parcel leaves us.</p>" } },
+        { "type": "qa", "settings": { "question": "Can I return something?", "answer": "<p>Yes — unworn pieces with tags attached can be returned within 30 days of delivery. Start a return from the link in your order confirmation email.</p>" } },
+        { "type": "qa", "settings": { "question": "Will sold-out sizes come back?", "answer": "<p>Usually not. Pieces are made in small runs and we rarely restock. Join the newsletter to hear about new releases first.</p>" } },
+        { "type": "qa", "settings": { "question": "How should I wash these garments?", "answer": "<p>Cold wash inside out, hang to dry. The washed-black finish is meant to fade further with wear — heat drying accelerates it unevenly.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

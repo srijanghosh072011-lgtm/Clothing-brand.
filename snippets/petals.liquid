@@ -1,0 +1,7 @@
+{%- comment -%}
+  Sakura canvas. Fixed + pointer-events:none so it never repaints scrolling
+  content. JS declines to start below 768px or under reduced-motion.
+{%- endcomment -%}
+{%- if settings.enable_petals -%}
+  <canvas class="petals" data-petals aria-hidden="true"></canvas>
+{%- endif -%}

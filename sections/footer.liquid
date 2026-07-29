@@ -1,0 +1,84 @@
+<footer class="footer">
+  <div class="wave-field" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="footer__cols">
+      <div class="footer__col">
+        <h3>{{ section.settings.heading_one | default: 'Shop' }}</h3>
+        <ul>
+          {%- for link in section.settings.menu_one.links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3>{{ section.settings.heading_two | default: 'Help' }}</h3>
+        <ul>
+          {%- for link in section.settings.menu_two.links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3>{{ section.settings.heading_three | default: 'Legal' }}</h3>
+        <ul>
+          {%- for link in section.settings.menu_three.links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3>Follow</h3>
+        <div class="social">
+          {%- if settings.social_instagram != blank -%}
+            <a class="icon-btn" href="{{ settings.social_instagram }}" rel="me noopener" target="_blank" aria-label="Instagram (opens in a new tab)">
+              {% render 'icon', name: 'instagram' %}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_tiktok != blank -%}
+            <a class="icon-btn" href="{{ settings.social_tiktok }}" rel="me noopener" target="_blank" aria-label="TikTok (opens in a new tab)">
+              {% render 'icon', name: 'tiktok' %}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_pinterest != blank -%}
+            <a class="icon-btn" href="{{ settings.social_pinterest }}" rel="me noopener" target="_blank" aria-label="Pinterest (opens in a new tab)">
+              {% render 'icon', name: 'pinterest' %}
+            </a>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.note != blank -%}
+          <p class="form-note" style="margin-top:1.25rem">{{ section.settings.note }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="footer__legal">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</span>
+      <span class="kanji">夜 &nbsp;{{ section.settings.tagline | default: 'Made for the hours after dark' }}</span>
+    </div>
+  </div>
+
+  <p class="footer__mark" aria-hidden="true">{{ section.settings.wordmark | default: 'NOCTAIRRE' }}</p>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "text", "id": "heading_one", "label": "Column 1 heading", "default": "Shop" },
+    { "type": "link_list", "id": "menu_one", "label": "Column 1 menu" },
+    { "type": "text", "id": "heading_two", "label": "Column 2 heading", "default": "Help" },
+    { "type": "link_list", "id": "menu_two", "label": "Column 2 menu" },
+    { "type": "text", "id": "heading_three", "label": "Column 3 heading", "default": "Legal" },
+    { "type": "link_list", "id": "menu_three", "label": "Column 3 menu" },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Made for the hours after dark" },
+    { "type": "text", "id": "wordmark", "label": "Oversized wordmark", "default": "NOCTAIRRE" },
+    { "type": "text", "id": "note", "label": "Small note" }
+  ],
+  "enabled_on": { "groups": ["footer"] }
+}
+{% endschema %}

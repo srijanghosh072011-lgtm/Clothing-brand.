@@ -1,0 +1,24 @@
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "announcement": {
+      "type": "marquee",
+      "blocks": {
+        "m1": { "type": "item", "settings": { "text": "限定 — Limited runs" } },
+        "m2": { "type": "item", "settings": { "text": "Free shipping over $200 CAD" } },
+        "m3": { "type": "item", "settings": { "text": "Shipped from Canada" } },
+        "m4": { "type": "item", "settings": { "text": "夜 — Made for after dark" } }
+      },
+      "block_order": ["m1", "m2", "m3", "m4"]
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "wordmark": "Noctairre",
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": ["header"]
+}

@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Get in touch",
+        "body": "<p>Questions about sizing, an order, or a return? Send a message and we reply within two business days.</p>"
+      }
+    }
+  },
+  "order": ["main"]
+}

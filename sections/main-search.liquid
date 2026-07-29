@@ -1,0 +1,74 @@
+{%- paginate search.results by 24 -%}
+  <div class="container" style="padding-top:clamp(9rem,16vw,13rem);padding-bottom:var(--pad-section)">
+    <div style="display:flex;flex-direction:column;gap:1.5rem;align-items:flex-start;margin-bottom:2.5rem">
+      <span class="eyebrow"><span class="kanji" aria-hidden="true">探</span> Search</span>
+      <h1 class="section-title">
+        {%- if search.performed -%}
+          {{ search.results_count }} result{% unless search.results_count == 1 %}s{% endunless %}
+        {%- else -%}
+          Search
+        {%- endif -%}
+      </h1>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" style="max-width:34rem;margin-bottom:3.5rem">
+      <div class="field">
+        <label for="q">What are you looking for?</label>
+        <input
+          id="q"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="Hoodie, sweatpant, black…"
+          autocomplete="off"
+        >
+      </div>
+      <button class="btn" type="submit" style="margin-top:1rem">
+        <span>Search</span>
+        <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'search' %}</span>
+      </button>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <div class="card-grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item, index: forloop.index0, sizes: '(min-width: 768px) 25vw, 50vw' %}
+            {%- else -%}
+              <article class="card">
+                <a href="{{ item.url }}" class="card__title">{{ item.title }}</a>
+                <p class="card__sub">{{ item.object_type }}</p>
+              </article>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="Pagination">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}
+                <span class="{% if part.title == paginate.current_page %}is-current{% endif %}">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <div class="empty-state">
+          <span class="kanji" aria-hidden="true">無</span>
+          <p>Nothing matched &ldquo;{{ search.terms | escape }}&rdquo;.</p>
+          <a class="btn btn--ghost" href="{{ routes.all_products_collection_url }}">
+            <span>Browse everything</span>
+            <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+          </a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{ "name": "Search", "settings": [] }
+{% endschema %}

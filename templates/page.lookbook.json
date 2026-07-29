@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "look": {
+      "type": "lookbook",
+      "blocks": {
+        "l1": { "type": "panel", "settings": { "kanji": "黒", "eyebrow": "Chapter 01", "heading": "Black wave", "body": "The first cut. Washed until the black breaks toward grey." } },
+        "l2": { "type": "panel", "settings": { "kanji": "夜", "eyebrow": "Chapter 02", "heading": "After dark", "body": "Built for the hours nobody photographs." } },
+        "l3": { "type": "panel", "settings": { "kanji": "空", "eyebrow": "Chapter 03", "heading": "Empty sky", "body": "Nothing added. Nothing decorative. Only the silhouette." } }
+      },
+      "block_order": ["l1", "l2", "l3"]
+    },
+    "band": {
+      "type": "cta-band",
+      "settings": { "kanji": "黒波", "heading": "Shop the collection", "cta_label": "Enter the collection", "cta_url": "shopify://collections/all" }
+    }
+  },
+  "order": ["look", "band"]
+}

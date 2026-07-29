@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "main": { "type": "main-collection", "settings": { "kanji": "蔵" } },
+    "newsletter": { "type": "newsletter", "settings": { "heading": "First access to every release" } }
+  },
+  "order": ["main", "newsletter"]
+}

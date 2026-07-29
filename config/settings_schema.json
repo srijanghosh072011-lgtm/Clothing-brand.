@@ -1,0 +1,54 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Noctairre",
+    "theme_version": "1.0.0",
+    "theme_author": "Noctairre",
+    "theme_documentation_url": "https://shopify.dev/docs/themes",
+    "theme_support_url": "https://shopify.dev/docs/themes"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The palette is fixed monochrome by design — colour comes only from product photography. To change it, edit the token block at the top of assets/noctairre.css."
+      },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "512×512 PNG. Falls back to the 夜 mark." },
+      { "type": "image_picker", "id": "share_image", "label": "Social share image", "info": "1200×630. Used when a link is shared." }
+    ]
+  },
+  {
+    "name": "Atmosphere",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_petals",
+        "label": "Drifting petals",
+        "default": true,
+        "info": "Desktop only. Automatically disabled on mobile and for visitors who prefer reduced motion."
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_grain",
+        "label": "Film grain overlay",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_intro",
+        "label": "夜 intro animation",
+        "default": true,
+        "info": "Shown once per visit. Turn off if you want the fastest possible first impression."
+      }
+    ]
+  },
+  {
+    "name": "Social",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_tiktok", "label": "TikTok" },
+      { "type": "url", "id": "social_pinterest", "label": "Pinterest" }
+    ]
+  }
+]

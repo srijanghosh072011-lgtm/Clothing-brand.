@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "story": {
+      "type": "about-story",
+      "settings": {
+        "eyebrow": "The brand",
+        "kanji": "物",
+        "heading": "Built for the hours after dark",
+        "body": "<p>Noctairre began with one idea: a garment heavy enough to feel like armour and quiet enough to disappear into a night street.</p><p>Every piece is cut oversized, garment-dyed, then washed until the black breaks. Nothing is printed loudly. The marks we do use — 夜, 黒波, 空 — are stitched small, meant to be found rather than shown.</p><p>We make in small runs. When a size sells out it usually stays sold out.</p>",
+        "image_label": "Atelier"
+      },
+      "blocks": {
+        "p1": { "type": "pillar", "settings": { "kanji": "質", "heading": "Heavyweight only", "body": "480gsm loopback cotton, garment-dyed and washed until it moves like something you have owned for years." } },
+        "p2": { "type": "pillar", "settings": { "kanji": "限", "heading": "Small runs", "body": "Each piece is cut in limited quantities. We do not restock — a sold size stays sold." } },
+        "p3": { "type": "pillar", "settings": { "kanji": "黒", "heading": "One colour", "body": "Everything is black. Washed, faded, distressed — but always black. The silhouette does the talking." } }
+      },
+      "block_order": ["p1", "p2", "p3"]
+    },
+    "band": {
+      "type": "cta-band",
+      "settings": { "kanji": "夜", "heading": "See the collection", "cta_label": "Shop everything", "cta_url": "shopify://collections/all" }
+    }
+  },
+  "order": ["story", "band"]
+}

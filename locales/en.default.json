@@ -1,0 +1,23 @@
+{
+  "general": {
+    "page": "Page",
+    "search": "Search",
+    "close": "Close"
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "products": {
+    "add_to_bag": "Add to bag",
+    "sold_out": "Sold out",
+    "unavailable": "Unavailable",
+    "size_guide": "Size guide"
+  },
+  "cart": {
+    "title": "Bag",
+    "empty": "Your bag is empty.",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "remove": "Remove"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "sections": { "main": { "type": "faq", "settings": { "eyebrow": "FAQ", "heading": "Questions" } } },
+  "order": ["main"]
+}

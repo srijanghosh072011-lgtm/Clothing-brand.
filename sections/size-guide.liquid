@@ -1,0 +1,107 @@
+{%- comment -%}
+  Size guide. Real measurement tables — editable row by row in the theme
+  editor so you can correct numbers once real samples land.
+{%- endcomment -%}
+
+<section class="section" style="padding-top:clamp(9rem,16vw,13rem)">
+  <div class="container container--tight">
+    <header style="display:flex;flex-direction:column;gap:1.5rem;align-items:flex-start;margin-bottom:3rem">
+      <span class="eyebrow"><span class="kanji" aria-hidden="true">寸</span> Sizing</span>
+      <h1 class="section-title">{{ section.settings.heading | default: 'Size guide' }}</h1>
+      {%- if section.settings.intro != blank -%}
+        <div class="prose">{{ section.settings.intro }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- for block in section.blocks -%}
+      <div style="margin-bottom:3.5rem" {{ block.shopify_attributes }}>
+        <h2 style="font-size:var(--t-md);font-weight:500;margin-bottom:1.25rem">{{ block.settings.title }}</h2>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="visually-hidden">{{ block.settings.title }} measurements in {{ block.settings.unit }}</caption>
+            <thead>
+              <tr>
+                {%- assign heads = block.settings.headings | split: ',' -%}
+                {%- for h in heads -%}
+                  <th scope="col">{{ h | strip }}</th>
+                {%- endfor -%}
+              </tr>
+            </thead>
+            <tbody>
+              {%- assign rows = block.settings.rows | newline_to_br | split: '<br />' -%}
+              {%- for row in rows -%}
+                {%- assign cells = row | strip | split: ',' -%}
+                {%- if cells.size > 0 and row != blank -%}
+                  <tr>
+                    {%- for cell in cells -%}
+                      {%- if forloop.first -%}
+                        <th scope="row">{{ cell | strip }}</th>
+                      {%- else -%}
+                        <td>{{ cell | strip }}</td>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </tr>
+                {%- endif -%}
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+
+        {%- if block.settings.note != blank -%}
+          <p class="form-note" style="margin-top:1rem">{{ block.settings.note }}</p>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Size guide",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Size guide" },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "<p>All measurements are taken flat, in centimetres, on the garment itself — not the body. Everything is cut oversized; size down one for a standard fit.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "table",
+      "name": "Table",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Hoodies & outerwear" },
+        { "type": "text", "id": "unit", "label": "Unit", "default": "centimetres" },
+        { "type": "text", "id": "headings", "label": "Column headings", "info": "Comma separated.", "default": "Size, Chest, Length, Shoulder, Sleeve" },
+        {
+          "type": "textarea",
+          "id": "rows",
+          "label": "Rows",
+          "info": "One row per line, cells comma separated. First cell becomes the row header.",
+          "default": "S, 60, 63, 56, 58\nM, 63, 66, 59, 60\nL, 66, 69, 62, 62\nXL, 69, 72, 65, 64\nXXL, 72, 75, 68, 66"
+        },
+        { "type": "text", "id": "note", "label": "Note", "default": "Allow ±2cm — every piece is washed individually." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size guide",
+      "blocks": [
+        { "type": "table" },
+        {
+          "type": "table",
+          "settings": {
+            "title": "Bottoms",
+            "headings": "Size, Waist, Inseam, Hip, Leg opening",
+            "rows": "S, 68-76, 74, 58, 26\nM, 74-84, 76, 61, 27\nL, 80-92, 78, 64, 28\nXL, 88-100, 80, 67, 29\nXXL, 96-110, 82, 70, 30"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

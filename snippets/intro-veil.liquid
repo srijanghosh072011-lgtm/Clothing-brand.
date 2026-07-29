@@ -1,0 +1,11 @@
+{%- comment -%}
+  Cinematic intro. Sits ON TOP of already-painted content — it never gates
+  rendering, so LCP is unaffected. Shown once per session, removed by JS,
+  and hidden entirely under prefers-reduced-motion or no-JS.
+{%- endcomment -%}
+{%- if settings.enable_intro -%}
+  <div class="veil" data-veil aria-hidden="true">
+    <span class="veil__mark kanji">夜</span>
+    <span class="veil__bar"></span>
+  </div>
+{%- endif -%}

@@ -1,0 +1,101 @@
+{%- comment -%}
+  Open Graph, Twitter cards and JSON-LD.
+  Schema is only emitted for content that is actually visible on the page —
+  marking up invisible data is what triggers Google manual actions.
+{%- endcomment -%}
+
+{%- liquid
+  assign og_title = page_title
+  assign og_desc = page_description | default: shop.description | default: shop.name
+  assign og_type = 'website'
+  if request.page_type == 'product'
+    assign og_type = 'product'
+  elsif request.page_type == 'article'
+    assign og_type = 'article'
+  endif
+-%}
+
+<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_desc | escape }}">
+
+{%- if request.page_type == 'product' and product.featured_image -%}
+  <meta property="og:image" content="http:{{ product.featured_image | image_url: width: 1200 }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1200">
+  <meta property="og:image:alt" content="{{ product.featured_image.alt | default: product.title | escape }}">
+{%- elsif settings.share_image -%}
+  <meta property="og:image" content="http:{{ settings.share_image | image_url: width: 1200 }}">
+  <meta property="og:image:width" content="1200">
+{%- endif -%}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_desc | escape }}">
+
+{%- comment -%} Organization — identifies the brand entity to search + AI engines. {%- endcomment -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }},
+    "description": {{ shop.description | default: 'Noctairre — Japanese-influenced dark streetwear.' | json }}
+    {%- if settings.social_instagram != blank or settings.social_tiktok != blank -%}
+      , "sameAs": [
+        {%- assign links = '' -%}
+        {%- if settings.social_instagram != blank -%}{%- assign links = links | append: settings.social_instagram | append: ',' -%}{%- endif -%}
+        {%- if settings.social_tiktok != blank -%}{%- assign links = links | append: settings.social_tiktok | append: ',' -%}{%- endif -%}
+        {%- if settings.social_pinterest != blank -%}{%- assign links = links | append: settings.social_pinterest | append: ',' -%}{%- endif -%}
+        {%- assign list = links | split: ',' -%}
+        {%- for l in list -%}{{ l | json }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}
+      ]
+    {%- endif -%}
+  }
+</script>
+
+{%- if request.page_type == 'product' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "url": {{ shop.url | append: product.url | json }},
+      {%- if product.featured_image -%}
+        "image": {{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }},
+      {%- endif -%}
+      "description": {{ product.description | strip_html | truncate: 400 | json }},
+      "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+      {%- if product.selected_or_first_available_variant.sku != blank -%}
+        "sku": {{ product.selected_or_first_available_variant.sku | json }},
+      {%- endif -%}
+      "offers": {
+        "@type": "Offer",
+        "price": {{ product.price | divided_by: 100.0 | json }},
+        "priceCurrency": {{ cart.currency.iso_code | json }},
+        "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+        "url": {{ shop.url | append: product.url | json }}
+      }
+    }
+  </script>
+{%- endif -%}
+
+{%- comment -%} Breadcrumbs on collection + product only, matching visible nav. {%- endcomment -%}
+{%- if request.page_type == 'product' or request.page_type == 'collection' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} }
+        {%- if request.page_type == 'collection' -%}
+          , { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
+        {%- else -%}
+          , { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+        {%- endif -%}
+      ]
+    }
+  </script>
+{%- endif -%}

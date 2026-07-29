@@ -1,0 +1,79 @@
+<section class="section">
+  <div class="container container--tight">
+    <div class="bezel reveal">
+      <div class="bezel__core">
+        <div class="news">
+          <div style="display:flex;flex-direction:column;gap:1.25rem;align-items:flex-start">
+            <span class="eyebrow">
+              <span class="kanji" aria-hidden="true">{{ section.settings.kanji | default: '報' }}</span>
+              {{ section.settings.eyebrow | default: 'Newsletter' }}
+            </span>
+            <h2 class="section-title" style="font-size:var(--t-xl)">{{ section.settings.heading }}</h2>
+            {%- if section.settings.body != blank -%}
+              <p class="lede" style="font-size:var(--t-base)">{{ section.settings.body }}</p>
+            {%- endif -%}
+          </div>
+
+          <div>
+            {%- form 'customer', class: 'news__form' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+
+              {%- if form.posted_successfully? -%}
+                <p class="form-note" role="status" style="margin-bottom:1rem">
+                  {{ section.settings.success | default: 'You are on the list. Watch your inbox.' }}
+                </p>
+              {%- elsif form.errors -%}
+                <p class="form-note form-note--error" role="alert" style="margin-bottom:1rem">
+                  {{ form.errors.messages.email | default: 'That email address did not work. Try again.' }}
+                </p>
+              {%- endif -%}
+
+              <div class="field">
+                <label for="news-email">Email address</label>
+                <input
+                  id="news-email"
+                  type="email"
+                  name="contact[email]"
+                  autocomplete="email"
+                  placeholder="you@example.com"
+                  required
+                  aria-required="true"
+                >
+              </div>
+
+              <button class="btn btn--block btn--lg" type="submit" style="margin-top:1rem">
+                <span>{{ section.settings.button | default: 'Join the list' }}</span>
+                <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+              </button>
+
+              <p class="form-note" style="margin-top:1rem">
+                {{ section.settings.consent | default: 'Occasional emails about new releases. Unsubscribe any time — we honour it within 10 business days.' }}
+              </p>
+            {%- endform -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Newsletter" },
+    { "type": "text", "id": "kanji", "label": "Kanji", "default": "報" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "First access to every release" },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Drops are small and they move quickly. Subscribers get the link before anyone else."
+    },
+    { "type": "text", "id": "button", "label": "Button", "default": "Join the list" },
+    { "type": "textarea", "id": "consent", "label": "Consent note", "info": "CASL requires clear opt-in wording and a working unsubscribe." },
+    { "type": "text", "id": "success", "label": "Success message", "default": "You are on the list. Watch your inbox." }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

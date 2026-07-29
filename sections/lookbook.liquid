@@ -1,0 +1,75 @@
+{%- comment -%}
+  Full-bleed editorial panels. Every slide falls back to a designed placeholder,
+  so the page reads as finished before a single photo exists.
+{%- endcomment -%}
+
+{%- for block in section.blocks -%}
+  <section class="look" {{ block.shopify_attributes }}>
+    <div class="look__media" aria-hidden="true">
+      {%- if block.settings.image != blank -%}
+        {{
+          block.settings.image
+          | image_url: width: 2400
+          | image_tag: loading: 'lazy', sizes: '100vw', widths: '640, 960, 1400, 1900, 2400', alt: ''
+        }}
+      {%- else -%}
+        <div class="ph"><span class="ph__mark kanji">{{ block.settings.kanji | default: '夜' }}</span></div>
+      {%- endif -%}
+      <div class="look__scrim"></div>
+    </div>
+
+    <div class="look__caption reveal">
+      {%- if block.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ block.settings.eyebrow }}</span>
+      {%- endif -%}
+
+      {%- if block.settings.heading != blank -%}
+        <h2 class="section-title" style="max-width:18ch">{{ block.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if block.settings.body != blank -%}
+        <p class="lede" style="text-align:center">{{ block.settings.body }}</p>
+      {%- endif -%}
+
+      {%- if block.settings.link_label != blank -%}
+        <a class="btn btn--lg btn--ghost" href="{{ block.settings.link_url }}">
+          <span>{{ block.settings.link_label }}</span>
+          <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endfor -%}
+
+{% schema %}
+{
+  "name": "Lookbook",
+  "max_blocks": 8,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "Panel",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "kanji", "label": "Placeholder kanji", "default": "夜" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "textarea", "id": "body", "label": "Body" },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link_url", "label": "Link URL" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook",
+      "blocks": [
+        { "type": "panel", "settings": { "eyebrow": "Chapter 01", "heading": "Black wave", "kanji": "黒" } },
+        { "type": "panel", "settings": { "eyebrow": "Chapter 02", "heading": "After dark", "kanji": "夜" } },
+        { "type": "panel", "settings": { "eyebrow": "Chapter 03", "heading": "Empty sky", "kanji": "空" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,65 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "Autumn / Winter — Collection 01",
+        "eyebrow_kanji": "黒",
+        "heading": "Noctairre",
+        "subheading": "Heavyweight garments cut for the hours after dark. Washed black, distressed by hand, made in small runs.",
+        "kanji": "夜",
+        "cta_label": "Shop the collection",
+        "cta_url": "shopify://collections/all",
+        "cta_two_label": "Lookbook",
+        "cta_two_url": "shopify://pages/lookbook"
+      }
+    },
+    "split": {
+      "type": "featured-split",
+      "settings": {
+        "eyebrow": "Featured",
+        "eyebrow_kanji": "波",
+        "heading": "Black wave",
+        "link_label": "All pieces",
+        "link_url": "shopify://collections/all"
+      },
+      "blocks": {
+        "b1": { "type": "panel", "settings": { "label": "Outerwear", "caption": "黒波 — Kuronami zip hoodie" } },
+        "b2": { "type": "panel", "settings": { "label": "Bottoms", "caption": "Wide-leg sweatpant" } },
+        "b3": { "type": "panel", "settings": { "label": "Tops", "caption": "Heavyweight tee" } },
+        "b4": { "type": "panel", "settings": { "label": "Accessories", "caption": "Embroidered patch" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4"]
+    },
+    "band": {
+      "type": "cta-band",
+      "settings": {
+        "kanji": "黒波",
+        "heading": "Shop the collection",
+        "body": "Every piece is cut, washed and finished in limited runs. When a size is gone, it is gone.",
+        "cta_label": "Enter the collection",
+        "cta_url": "shopify://collections/all"
+      }
+    },
+    "grid": {
+      "type": "product-grid",
+      "settings": {
+        "eyebrow": "New arrivals",
+        "eyebrow_kanji": "新",
+        "heading": "Latest pieces",
+        "count": 6
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Newsletter",
+        "kanji": "報",
+        "heading": "First access to every release",
+        "body": "Drops are small and they move quickly. Subscribers get the link before anyone else.",
+        "button": "Join the list"
+      }
+    }
+  },
+  "order": ["hero", "split", "band", "grid", "newsletter"]
+}

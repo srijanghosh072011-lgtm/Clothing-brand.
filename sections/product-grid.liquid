@@ -1,0 +1,70 @@
+<section class="section">
+  <div class="container">
+    <div class="section-head section-head--split">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;align-items:flex-start">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow reveal">
+            <span class="kanji" aria-hidden="true">{{ section.settings.eyebrow_kanji | default: '新' }}</span>
+            {{ section.settings.eyebrow }}
+          </span>
+        {%- endif -%}
+        <h2 class="section-title reveal" data-delay="1">{{ section.settings.heading }}</h2>
+      </div>
+
+      {%- if section.settings.collection != blank -%}
+        <a class="btn btn--ghost reveal" data-delay="2" href="{{ section.settings.collection.url }}">
+          <span>View all</span>
+          <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- liquid
+      assign items = section.settings.collection.products
+      assign limit = section.settings.count | default: 6
+    -%}
+
+    {%- if items.size > 0 -%}
+      <div class="card-grid">
+        {%- for product in items limit: limit -%}
+          {% render 'product-card',
+            product: product,
+            index: forloop.index0,
+            sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 100vw'
+          %}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      {%- comment -%} No collection chosen yet — show designed placeholders, not an empty page. {%- endcomment -%}
+      <div class="card-grid">
+        {%- for i in (1..limit) -%}
+          <article class="card reveal" data-delay="{{ forloop.index0 | modulo: 4 }}">
+            <div class="card__media">
+              {% render 'placeholder-media', ratio: 'portrait', label: 'Awaiting product' %}
+            </div>
+            <div class="card__body">
+              <div>
+                <h3 class="card__title">Product name</h3>
+                <p class="card__sub">Choose a collection in the theme editor</p>
+              </div>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label", "default": "New arrivals" },
+    { "type": "text", "id": "eyebrow_kanji", "label": "Eyebrow kanji", "default": "新" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Latest pieces" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "count", "label": "Products shown", "min": 3, "max": 12, "step": 3, "default": 6 }
+  ],
+  "presets": [{ "name": "Product grid" }]
+}
+{% endschema %}

@@ -1,0 +1,43 @@
+{%- comment -%}
+  Designed placeholder — gradient + grain + 夜 watermark, zero image files.
+  Renders the real image the moment one exists on the product/section.
+
+  Params:
+    image  — a Shopify image object (optional)
+    ratio  — portrait | square | wide | tall  (default portrait)
+    label  — small caption burned into the corner (optional)
+    sizes  — responsive sizes attribute (optional)
+    alt    — overrides image.alt (optional)
+    eager  — true to skip lazy-loading (use for the LCP image only)
+{%- endcomment -%}
+
+{%- liquid
+  assign r = ratio | default: 'portrait'
+  assign sz = sizes | default: '(min-width: 900px) 33vw, 100vw'
+  assign load = 'lazy'
+  if eager
+    assign load = 'eager'
+  endif
+-%}
+
+<div class="frame frame--{{ r }}">
+  {%- if image != blank -%}
+    {{
+      image
+      | image_url: width: 1600
+      | image_tag:
+        loading: load,
+        sizes: sz,
+        widths: '320, 480, 640, 840, 1080, 1400, 1600',
+        alt: alt | default: image.alt | escape,
+        class: 'frame__img'
+    }}
+  {%- else -%}
+    <div class="ph" role="img" aria-label="{{ label | default: 'Noctairre product image coming soon' | escape }}">
+      <span class="ph__mark kanji" aria-hidden="true">夜</span>
+      {%- if label != blank -%}
+        <span class="ph__label" aria-hidden="true">{{ label }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>

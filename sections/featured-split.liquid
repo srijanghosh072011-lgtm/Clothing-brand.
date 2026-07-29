@@ -1,0 +1,99 @@
+{%- comment -%}
+  Asymmetric bento — 7/5 then 5/7 so the eye zig-zags instead of scanning
+  a symmetrical grid. Collapses to a single column below 768px.
+{%- endcomment -%}
+
+<section class="section">
+  <div class="container">
+    <div class="section-head section-head--split">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;align-items:flex-start">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow reveal">
+            <span class="kanji" aria-hidden="true">{{ section.settings.eyebrow_kanji | default: '波' }}</span>
+            {{ section.settings.eyebrow }}
+          </span>
+        {%- endif -%}
+        <h2 class="section-title reveal" data-delay="1">{{ section.settings.heading }}</h2>
+      </div>
+
+      {%- if section.settings.link_label != blank -%}
+        <a class="btn btn--ghost reveal" data-delay="2" href="{{ section.settings.link_url }}">
+          <span>{{ section.settings.link_label }}</span>
+          <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="split">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign slots = 'a,b,c,d' | split: ','
+          assign slot = slots[forloop.index0] | default: 'a'
+          assign ratios = 'wide,tall,tall,wide' | split: ','
+          assign r = ratios[forloop.index0] | default: 'wide'
+        -%}
+
+        <div class="split__{{ slot }} reveal" data-delay="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <div class="bezel">
+            <div class="bezel__core">
+              {%- if block.settings.product != blank -%}
+                <a href="{{ block.settings.product.url }}" aria-label="{{ block.settings.product.title | escape }}">
+                  {% render 'placeholder-media',
+                    image: block.settings.product.featured_image,
+                    ratio: r,
+                    sizes: '(min-width: 768px) 55vw, 100vw',
+                    label: block.settings.product.type,
+                    alt: block.settings.product.title
+                  %}
+                </a>
+              {%- else -%}
+                {% render 'placeholder-media',
+                  image: block.settings.image,
+                  ratio: r,
+                  sizes: '(min-width: 768px) 55vw, 100vw',
+                  label: block.settings.label
+                %}
+              {%- endif -%}
+            </div>
+          </div>
+
+          {%- if block.settings.caption != blank -%}
+            <p class="card__sub" style="margin-top:1rem">{{ block.settings.caption }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Asymmetric grid",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label", "default": "Featured" },
+    { "type": "text", "id": "eyebrow_kanji", "label": "Eyebrow kanji", "default": "波" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Black wave" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "All pieces" },
+    { "type": "url", "id": "link_url", "label": "Link URL" }
+  ],
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "Panel",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product", "info": "Uses the product's own image. Leave empty to use a custom image instead." },
+        { "type": "image_picker", "id": "image", "label": "Custom image" },
+        { "type": "text", "id": "label", "label": "Placeholder label", "default": "Outerwear" },
+        { "type": "text", "id": "caption", "label": "Caption" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Asymmetric grid",
+      "blocks": [{ "type": "panel" }, { "type": "panel" }, { "type": "panel" }, { "type": "panel" }]
+    }
+  ]
+}
+{% endschema %}

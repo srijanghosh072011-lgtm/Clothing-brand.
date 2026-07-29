@@ -1,0 +1,46 @@
+<section class="band">
+  <div class="band__wash" aria-hidden="true"></div>
+  <div class="wave-field" aria-hidden="true"></div>
+
+  <div class="container band__inner">
+    {%- if section.settings.kanji != blank -%}
+      <span class="kanji reveal" style="font-size:clamp(2.5rem,7vw,4.5rem);opacity:.22" aria-hidden="true">
+        {{- section.settings.kanji -}}
+      </span>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title reveal" data-delay="1" style="max-width:16ch">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <p class="lede reveal" data-delay="2" style="text-align:center">{{ section.settings.body }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.cta_label != blank -%}
+      <a class="btn btn--lg btn--ghost reveal" data-delay="3" href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}">
+        <span>{{ section.settings.cta_label }}</span>
+        <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CTA band",
+  "settings": [
+    { "type": "text", "id": "kanji", "label": "Kanji", "default": "黒波" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop the collection" },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Every piece is cut, washed and finished in limited runs. When a size is gone, it is gone."
+    },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Enter the collection" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "presets": [{ "name": "CTA band" }]
+}
+{% endschema %}

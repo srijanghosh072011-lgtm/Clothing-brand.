@@ -1,0 +1,4 @@
+{
+  "sections": { "main": { "type": "main-page", "settings": { "kanji": "文" } } },
+  "order": ["main"]
+}

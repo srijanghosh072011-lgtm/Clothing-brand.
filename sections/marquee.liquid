@@ -1,0 +1,36 @@
+{%- comment -%} Infinite ticker. Track is duplicated so the loop has no seam. {%- endcomment -%}
+<div class="marquee" aria-hidden="true">
+  {%- for i in (1..2) -%}
+    <div class="marquee__track">
+      {%- for block in section.blocks -%}
+        <span>{{ block.settings.text }}</span>
+        <span>—</span>
+      {%- endfor -%}
+    </div>
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "Marquee",
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Free shipping over $200 CAD" }]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee",
+      "blocks": [
+        { "type": "item", "settings": { "text": "限定 — Limited runs" } },
+        { "type": "item", "settings": { "text": "Free shipping over $200 CAD" } },
+        { "type": "item", "settings": { "text": "Shipped from Canada" } },
+        { "type": "item", "settings": { "text": "夜 — Made for after dark" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

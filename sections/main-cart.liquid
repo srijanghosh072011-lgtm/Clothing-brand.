@@ -1,0 +1,98 @@
+{%- comment -%}
+  Full cart page. The drawer is the primary surface, but this must exist:
+  it's the no-JS fallback and where Shopify sends people from some flows.
+{%- endcomment -%}
+
+<div class="container container--tight" style="padding-top:clamp(9rem,16vw,13rem);padding-bottom:var(--pad-section)">
+  <div style="display:flex;flex-direction:column;gap:1.5rem;align-items:flex-start;margin-bottom:3rem">
+    <span class="eyebrow"><span class="kanji" aria-hidden="true">袋</span> Bag</span>
+    <h1 class="section-title">Your bag</h1>
+  </div>
+
+  {%- if cart.item_count == 0 -%}
+    <div class="empty-state">
+      <span class="kanji" aria-hidden="true">空</span>
+      <p>Your bag is empty.</p>
+      <a class="btn" href="{{ routes.all_products_collection_url }}">
+        <span>Start shopping</span>
+        <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+      </a>
+    </div>
+  {%- else -%}
+    <form action="{{ routes.cart_url }}" method="post">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr>
+                <td>
+                  <div style="display:flex;gap:1rem;align-items:flex-start">
+                    <a href="{{ item.url }}" style="flex:0 0 4rem">
+                      <div class="line-item__media" style="width:4rem">
+                        {%- if item.image -%}
+                          <img src="{{ item.image | image_url: width: 160 }}" alt="" width="160" height="213" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+                        {%- else -%}
+                          <div class="ph"><span class="ph__mark kanji">夜</span></div>
+                        {%- endif -%}
+                      </div>
+                    </a>
+                    <div>
+                      <a href="{{ item.url }}"><strong style="font-weight:500">{{ item.product.title }}</strong></a>
+                      {%- unless item.variant.title contains 'Default' -%}
+                        <p class="line-item__variant">{{ item.variant.title }}</p>
+                      {%- endunless -%}
+                      <p class="line-item__variant">{{ item.final_price | money }} each</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <label class="visually-hidden" for="qty-{{ item.index | plus: 1 }}">
+                    Quantity for {{ item.product.title }}
+                  </label>
+                  <input
+                    id="qty-{{ item.index | plus: 1 }}"
+                    type="number"
+                    name="updates[]"
+                    value="{{ item.quantity }}"
+                    min="0"
+                    inputmode="numeric"
+                    style="width:5rem;padding:.5rem .75rem;background:rgba(244,242,237,.04);border:1px solid var(--line-strong);border-radius:.5rem;color:var(--bone)"
+                  >
+                </td>
+                <td>{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem;margin-top:2rem">
+        <button class="btn btn--ghost" type="submit" name="update">
+          <span>Update bag</span>
+          <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+        </button>
+
+        <div style="text-align:right">
+          <p class="totals" style="gap:1.5rem"><span>Subtotal</span> <strong>{{ cart.total_price | money }}</strong></p>
+          <p class="form-note">Taxes and shipping calculated at checkout.</p>
+        </div>
+      </div>
+
+      <button class="btn btn--block btn--lg" type="submit" name="checkout" style="margin-top:2rem">
+        <span>Checkout</span>
+        <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+      </button>
+    </form>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

@@ -1,0 +1,124 @@
+{%- comment -%}
+  Cart drawer. Rendered once in the layout; JS re-fetches this same section via
+  Shopify's Section Rendering API after every cart mutation, so the markup lives
+  in exactly one place. ponytail: no client-side templating to keep in sync.
+{%- endcomment -%}
+
+<div class="drawer" data-drawer role="dialog" aria-modal="true" aria-label="Shopping bag">
+  <div class="drawer__scrim" data-cart-close></div>
+
+  <div class="drawer__panel" data-drawer-panel>
+    <div data-drawer-inner>
+      <div class="drawer__head">
+        <span class="drawer__title">
+          買い物袋 &nbsp;Bag
+          <span data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>({{ cart.item_count }})</span>
+        </span>
+        <button class="icon-btn" type="button" data-cart-close aria-label="Close bag">
+          {% render 'icon', name: 'close' %}
+        </button>
+      </div>
+
+      {%- if cart.item_count == 0 -%}
+        <div class="drawer__body">
+          <div class="empty-state">
+            <span class="kanji" aria-hidden="true">空</span>
+            <p>Your bag is empty.</p>
+            <a class="btn btn--ghost" href="{{ routes.all_products_collection_url }}">
+              <span>Browse everything</span>
+              <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+            </a>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="drawer__body">
+          {%- for item in cart.items -%}
+            <div class="line-item">
+              <a class="line-item__media" href="{{ item.url }}" aria-hidden="true" tabindex="-1">
+                {%- if item.image -%}
+                  <img
+                    src="{{ item.image | image_url: width: 200 }}"
+                    alt=""
+                    width="200"
+                    height="267"
+                    loading="lazy"
+                    style="width:100%;height:100%;object-fit:cover"
+                  >
+                {%- else -%}
+                  <div class="ph"><span class="ph__mark kanji">夜</span></div>
+                {%- endif -%}
+              </a>
+
+              <div>
+                <a href="{{ item.url }}"><p class="line-item__name">{{ item.product.title }}</p></a>
+
+                {%- unless item.variant.title contains 'Default' -%}
+                  <p class="line-item__variant">{{ item.variant.title }}</p>
+                {%- endunless -%}
+
+                <p class="line-item__variant">{{ item.final_line_price | money }}</p>
+
+                <div style="display:flex;align-items:center;gap:.75rem;margin-top:.75rem;flex-wrap:wrap">
+                  <div class="qty">
+                    <button
+                      type="button"
+                      data-qty
+                      data-key="{{ item.key }}"
+                      data-qty="{{ item.quantity | minus: 1 }}"
+                      aria-label="Decrease quantity of {{ item.product.title | escape }}"
+                    >
+                      {% render 'icon', name: 'minus' %}
+                    </button>
+                    <output aria-label="Quantity">{{ item.quantity }}</output>
+                    <button
+                      type="button"
+                      data-qty
+                      data-key="{{ item.key }}"
+                      data-qty="{{ item.quantity | plus: 1 }}"
+                      aria-label="Increase quantity of {{ item.product.title | escape }}"
+                    >
+                      {% render 'icon', name: 'plus' %}
+                    </button>
+                  </div>
+
+                  <button
+                    class="link-underline"
+                    type="button"
+                    data-qty
+                    data-key="{{ item.key }}"
+                    data-qty="0"
+                    style="color:var(--mute)"
+                  >
+                    Remove<span class="visually-hidden"> {{ item.product.title }}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <div class="drawer__foot">
+          <div class="totals">
+            <span>Subtotal</span>
+            <strong>{{ cart.total_price | money }}</strong>
+          </div>
+          <p class="form-note">Taxes and shipping calculated at checkout.</p>
+
+          <form action="{{ routes.cart_url }}" method="post">
+            <button class="btn btn--block btn--lg" type="submit" name="checkout">
+              <span>Checkout</span>
+              <span class="btn__orb" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+            </button>
+          </form>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": []
+}
+{% endschema %}
