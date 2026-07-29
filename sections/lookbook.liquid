@@ -5,7 +5,8 @@
 
 {%- for block in section.blocks -%}
   <section class="look" {{ block.shopify_attributes }}>
-    <div class="look__media" aria-hidden="true">
+    {%- assign scrim = block.settings.overlay | default: 55 | divided_by: 100.0 -%}
+    <div class="look__media" aria-hidden="true" style="--scrim: {{ scrim }}">
       {%- if block.settings.image != blank -%}
         {{
           block.settings.image
@@ -52,6 +53,17 @@
       "name": "Panel",
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "range",
+          "id": "overlay",
+          "label": "Image darkening",
+          "min": 25,
+          "max": 90,
+          "step": 5,
+          "unit": "%",
+          "default": 55,
+          "info": "Raise this for photos shot on a white backdrop. 25% is the readable floor."
+        },
         { "type": "text", "id": "kanji", "label": "Placeholder kanji", "default": "夜" },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
         { "type": "text", "id": "heading", "label": "Heading" },

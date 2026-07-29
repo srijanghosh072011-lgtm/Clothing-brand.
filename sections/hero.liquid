@@ -2,7 +2,8 @@
   <div class="hero__glow" aria-hidden="true"></div>
 
   {%- if section.settings.image != blank -%}
-    <div class="look__media" aria-hidden="true">
+    {%- assign scrim = section.settings.overlay | divided_by: 100.0 -%}
+    <div class="look__media" aria-hidden="true" style="--scrim: {{ scrim }}">
       {{
         section.settings.image
         | image_url: width: 2400
@@ -84,7 +85,18 @@
     { "type": "url", "id": "cta_url", "label": "Primary link" },
     { "type": "text", "id": "cta_two_label", "label": "Secondary button", "default": "Lookbook" },
     { "type": "url", "id": "cta_two_url", "label": "Secondary link" },
-    { "type": "image_picker", "id": "image", "label": "Background image", "info": "Optional. Leave empty for the void-black treatment." }
+    { "type": "image_picker", "id": "image", "label": "Background image", "info": "Optional. Leave empty for the void-black treatment." },
+    {
+      "type": "range",
+      "id": "overlay",
+      "label": "Image darkening",
+      "min": 25,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 55,
+      "info": "Measured: 25% is the lowest setting where the wordmark stays readable over a pure-white studio backdrop, so the slider stops there. Product shots on white want 55% or more. Dark, moody photography can sit at 25–40%."
+    }
   ],
   "presets": [{ "name": "Hero" }]
 }

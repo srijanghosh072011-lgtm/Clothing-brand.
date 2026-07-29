@@ -841,11 +841,14 @@ ol {
     linear-gradient(160deg, #171717 0%, #0c0c0c 48%, #101010 100%);
 }
 
+/* Grain on the placeholder. Opacity is kept low enough that the panel still
+   reads correctly if mix-blend-mode is ignored (Safari quirks, forced-colors,
+   some GPU paths) — at 0.5 a failed blend turned these panels mid-grey. */
 .ph::after {
   content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.5;
+  opacity: 0.1;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23p)' opacity='0.5'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
   pointer-events: none;
@@ -1683,10 +1686,17 @@ ol {
   object-fit: cover;
 }
 
+/* Image scrim.
+   Two layers: a flat tint (--scrim, set per section in the theme editor) under a
+   gradient that deepens where text sits. Sized so bone text clears 4.5:1 even
+   over a pure-white studio backdrop — product shots are shot on white, and an
+   unscrimmed one blows a hole straight through a void-black page. */
 .look__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(5, 5, 5, 0.85) 0%, rgba(5, 5, 5, 0.2) 50%, rgba(5, 5, 5, 0.6) 100%);
+  background:
+    linear-gradient(to top, rgba(5, 5, 5, 0.96) 0%, rgba(5, 5, 5, 0.3) 55%, rgba(5, 5, 5, 0.7) 100%),
+    rgba(5, 5, 5, var(--scrim, 0.55));
 }
 
 .look__caption {

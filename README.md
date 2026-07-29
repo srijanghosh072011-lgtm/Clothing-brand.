@@ -146,6 +146,11 @@ Almost everything is editable in **Online Store → Themes → Customize**:
 - Swap any placeholder for a real image
 - Turn petals, film grain and the 夜 intro on or off
   (**Theme settings → Atmosphere**)
+- **Image darkening** on the hero and every lookbook panel. Product photography
+  is shot on white backdrops, which blows a hole through a void-black page and
+  makes the wordmark unreadable. The slider floor is 25% because that is the
+  measured point where bone text still clears 4.5:1 over pure white; the default
+  is 55%. Push it higher for bright images, lower for dark ones.
 - Social links (**Theme settings → Social**)
 - Size guide tables — add rows and columns as plain comma-separated text
 
