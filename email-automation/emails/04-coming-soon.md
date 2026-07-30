@@ -39,7 +39,7 @@ Noctairre
 *[One or two lines on the piece — weight, cut, what makes it different.
 Match the product page copy. Keep it under 40 words.]*
 
-${{ product.price }} CAD · S–XXL
+${{ product.price }} CAD
 
 [Shop it →]({{ product.url }})
 
@@ -57,9 +57,12 @@ Noctairre
 
 ## Notes
 
-- **You have no coming-soon products right now.** All 13 products are `ACTIVE`
-  and published. This template is unusable until you create one — see the
+- **Nothing is in a coming-soon state right now** — every product in the store
+  is published. This template stays unused until you draft or tag one; see the
   README, step 5.
+- **No discount code here, including `WELCOME10`.** A launch at full price is
+  the point, and a permanent code in a launch email invites people to wait for
+  the discount instead of buying on day one.
 - Send 4b to the interest tag **first**, then to the full list 24–48h later.
   Early access is the reason people join the list; if there's no gap, there's
   no reason.

@@ -8,37 +8,24 @@
 
 **Subject:** Your 10% is here
 
-**Preheader:** Code inside. No expiry, one use.
+**Preheader:** Code inside.
 
 ---
 
 Thanks for signing up.
 
-Here's 10% off your first order:
+Here's 10% off your order:
 
 ### WELCOME10
 
-Enter it at checkout. Works on everything, one use per customer.
-
----
-
-If you're not sure where to start, most people start here:
-
-**Sora Heavyweight Tee** — $75
-260gsm combed cotton. Heavy enough to hang properly, not so heavy it can't be worn alone.
-
-**Yozora Pullover Hoodie** — $165
-The quietest piece we make. No zip, no print, no hardware — just weight and silhouette.
-
-**Kuronami Distressed Zip Hoodie** — $185
-The piece the collection is built around. 480gsm loopback, garment-dyed then stone-washed until the black breaks toward graphite.
+Enter it at checkout. Works on everything.
 
 [Shop the collection →]
 
 ---
 
-Everything is cut to the same boxy block, so sizing carries across the range.
-If you're between sizes, size down — these run large by design.
+*[Optional: two or three lines on what the brand is. Written once, left alone.
+This is the only email where a new subscriber will read it.]*
 
 —
 Noctairre
@@ -51,11 +38,15 @@ Noctairre
 
 ## Notes
 
+- **No products listed on purpose.** Hardcoding titles and prices into a
+  template means editing it every time the line changes or a piece sells out —
+  and it can send people to a dead link. If you want product blocks, use
+  Shopify Email's **Featured products** section, which pulls live from the
+  catalog and drops out automatically when something is unavailable.
 - Replace `[Business address]` with your real mailing address — **required
   under CASL**. Shopify Email inserts this automatically once set in
   Settings → Store details.
 - `[Unsubscribe]` is auto-inserted by Shopify Email. Do not remove it.
-- If you switch to unique per-subscriber codes via Shopify Forms, replace
-  `WELCOME10` with the `{{ discount_code }}` merge tag.
-- Product prices are hardcoded here. If you reprice, update this template —
-  it will not follow automatically.
+- The code is deliberately not described as expiring or single-use — it's the
+  same code used for recurring campaigns, so it has neither. Don't add
+  "one time only" to this copy.

@@ -16,19 +16,15 @@ Your code is still good.
 
 ### WELCOME10
 
-10% off, one use, no expiry.
+10% off, everything.
+
+[Shop the collection →]
 
 ---
 
-Two things worth knowing before you order:
-
-**Sizing.** Everything is cut to one boxy block. Between sizes, size down.
-
-**Weight.** The hoodies are 480gsm and the Sumi jacket is 620gsm. They're
-heavier than almost anything else you own. That's the point, but it's worth
-expecting.
-
-[Shop the collection →]
+*[Optional: one genuinely useful line — sizing guidance, fabric weights,
+shipping times. Something that answers the reason people hesitate. Fill this
+in once the real line is loaded; leave it out rather than invent it.]*
 
 —
 Noctairre
@@ -41,7 +37,9 @@ Noctairre
 
 ## Notes
 
-- Send **once**. Do not build a 5-email nurture sequence off a signup form —
+- Send **once**. Do not build a five-email nurture sequence off a signup form —
   it burns the list. One reminder is enough.
 - The `has not placed an order` condition matters. Without it you'll email
   people who already bought, which reads as careless.
+- Don't imply the code is about to expire. It isn't, and a deadline that
+  doesn't happen makes every future one ignorable.

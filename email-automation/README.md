@@ -5,6 +5,11 @@ Every flow here is a fixed trigger firing a fixed template.
 
 Store: Noctairre · `4cwdw1-f9.myshopify.com` · CAD · Canada (CST)
 
+> **Catalog is placeholder.** The products currently in the store are template
+> data, not the real line. Nothing in these templates hardcodes a product name,
+> price or SKU — everything runs off merge tags, so the emails stay correct
+> when the real catalog goes in.
+
 ---
 
 ## The rule this is built on
@@ -27,7 +32,7 @@ stays flat whether you send 100 emails or 100,000.
 | 3 | Reminder if code unused | **Shopify Email** automation, 3-day wait | Subscribed 3 days ago, no order | Free |
 | 4 | Back-in-stock alert | **Back-in-stock app** (Swym / Appikon, free tier) | Variant inventory `0 → >0` | Free tier |
 | 5 | Coming-soon alert | Product tag + **Shopify Email** campaign | Manual send on launch | Free |
-| 6 | ~Monthly 10% offer | **Shopify Email** campaign, scheduled | You schedule it | Free |
+| 6 | Recurring 10% offer | **Shopify Email** campaign, scheduled | You schedule it | Free |
 
 ### Where Zapier fits: nowhere in the above — and that's deliberate
 
@@ -50,21 +55,36 @@ Those cost Zapier *tasks*, not AI credits.
 
 ## Setup, in order
 
-### 1. Discount code
+### 1. Discount code — one code, used everywhere
 
 Create in Shopify admin → **Discounts → Create discount → Amount off products**:
 
-- Code: `WELCOME10`
-- Type: Percentage, **10%**
-- Applies to: All products
-- Eligibility: All customers
-- Usage limit: **one use per customer** ← important, see caveat below
-- No end date
+| Setting | Value |
+|---|---|
+| Code | `WELCOME10` |
+| Type | Percentage, **10%** |
+| Applies to | All products |
+| Eligibility | All customers |
+| Usage limit | **Leave both limits off** |
+| End date | None |
 
-> **Caveat on static codes.** A single shared code like `WELCOME10` ends up on
-> RetailMeNot within weeks and gets used by people who never gave you an email.
-> The better pattern is a **unique code per subscriber**, which Shopify Forms
-> generates automatically. Prefer that if Forms supports it on your plan.
+> **Do not set "one use per customer."** This single code is both the signup
+> reward *and* the recurring offer. Capping it at one use per customer means
+> anyone who redeems it on their first order is locked out of every campaign
+> after that — they'd get an email with a code that fails at checkout, which is
+> worse than not emailing them.
+
+**What one shared code costs you.** Two tradeoffs, both real, both accepted by
+choosing this route:
+
+1. **It will leak.** A single static code ends up on RetailMeNot and gets used
+   by people who never gave you an email. Unavoidable with a shared code.
+2. **No attribution or urgency.** Because it never expires and never changes,
+   you can't tell which campaign drove which order, and "ends Sunday" isn't
+   enforceable.
+
+If either starts to hurt, the fix is per-campaign codes — see
+`emails/05-recurring-offer.md`.
 
 ### 2. Email capture — Shopify Forms
 
@@ -72,8 +92,8 @@ Shopify admin → **Apps → Shopify Forms** (free, first-party) → create form
 
 - Type: Popup, trigger at 15s or 40% scroll
 - Fields: Email only (every extra field cuts conversion)
-- Offer: 10% off
-- **Consent checkbox is mandatory** — see CASL note below
+- Offer: 10% off, code `WELCOME10`
+- **Consent checkbox is mandatory** — see CASL below
 
 Place it on the homepage and product pages.
 
@@ -95,38 +115,28 @@ free tiers and both are rule-based, no AI.
 Adds a "Notify me when available" button on sold-out variants, then fires
 `emails/03-back-in-stock.md` when inventory goes above zero.
 
-**Currently sold out** (these are what the button would appear on today):
-
-| Product | Size | Price |
-|---|---|---|
-| Kuronami Distressed Zip Hoodie | M | $185 |
-| Kage Cropped Zip Hoodie | L | $180 |
-| Mu Waffle Thermal | XXL | $95 |
+Nothing to configure per-product — the app watches every variant.
 
 ### 5. Coming soon
 
-**You have no coming-soon products right now** — all 13 products are `ACTIVE`
-and published. To create that state:
+No product is in a coming-soon state right now; everything in the catalog is
+published. To create that state:
 
 1. Set the product's status to **Draft**, or publish it with a
-   `coming-soon` tag and inventory 0 with "continue selling" off.
+   `coming-soon` tag, inventory 0 and "continue selling" off.
 2. Add a signup form on that product page (Shopify Forms, tagged
    `interest:<product-handle>`).
 3. On launch day, send `emails/04-coming-soon.md` as a campaign to that tag.
 
 Step 3 is manual by design — a launch is a decision, not a trigger.
 
-### 6. Monthly offer
+### 6. Recurring offer
 
-Shopify Email → **Campaigns** → schedule `emails/05-monthly-offer.md`.
+Shopify Email → **Campaigns** → schedule `emails/05-recurring-offer.md`.
 
-Cadence: send it **every 5–6 weeks, not on a fixed date**. A predictable
-monthly discount trains people to wait for it and stop paying full price —
-which is a real margin problem for a brand at your price points ($75–$245).
-Vary the hook: early access, restock, seasonal, member-only.
-
-Create a fresh code each send (`NOCT-OCT`, `NOCT-NOV`…) with a 7-day expiry so
-urgency is real.
+Cadence: **every 5–6 weeks, not a fixed date.** A discount that lands on the
+1st of every month teaches the list to wait for the 1st and stop paying full
+price. Vary the hook instead: early access, restock, seasonal, member-only.
 
 ---
 
@@ -163,11 +173,11 @@ Consent wording for the form:
 
 ```
 emails/
-  01-welcome.md         Sent immediately on subscribe
-  02-reminder.md        3 days later, if no order
-  03-back-in-stock.md   Variant inventory 0 → >0
-  04-coming-soon.md     Manual, on launch day
-  05-monthly-offer.md   Scheduled, every 5–6 weeks
+  01-welcome.md          Sent immediately on subscribe
+  02-reminder.md         3 days later, if no order
+  03-back-in-stock.md    Variant inventory 0 → >0
+  04-coming-soon.md      Manual, on launch day
+  05-recurring-offer.md  Scheduled, every 5–6 weeks
 ```
 
 Each file has subject line, preheader and body. Copy into Shopify Email and
