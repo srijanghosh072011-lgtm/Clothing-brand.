@@ -29,6 +29,23 @@
         "info": "Desktop only. Automatically disabled on mobile and for visitors who prefer reduced motion."
       },
       {
+        "type": "color",
+        "id": "petal_color",
+        "label": "Petal colour",
+        "default": "#F7B9CE",
+        "info": "The one place colour is allowed on the site. #F7B9CE is sakura pink; #E8A0BC is deeper; #F4F2ED returns them to bone white."
+      },
+      {
+        "type": "range",
+        "id": "petal_density",
+        "label": "Petal count",
+        "min": 8,
+        "max": 48,
+        "step": 2,
+        "default": 26,
+        "info": "Higher is heavier on older laptops. 26 reads as drifting; above 40 starts to feel like weather."
+      },
+      {
         "type": "checkbox",
         "id": "enable_grain",
         "label": "Film grain overlay",

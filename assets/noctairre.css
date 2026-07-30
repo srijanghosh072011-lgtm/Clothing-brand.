@@ -448,9 +448,14 @@ ol {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* width/height are load-bearing. <canvas> is a replaced element, so with
+   width:auto it takes its intrinsic 300x150 and `inset: 0` cannot stretch it —
+   the field would sit in a small box in the top-left corner. */
 .petals {
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: var(--z-petals);
   pointer-events: none;
 }

@@ -65,6 +65,10 @@ Change it there and it propagates everywhere.
 --dim       #56534F   DECORATION ONLY    2.7:1 — never use for text
 ```
 
+**The one exception to monochrome** is the sakura petals, `#F7B9CE`. Nothing
+else on the site carries hue — that is what keeps the pink reading as weather
+rather than decoration. Colour and count are in **Theme settings → Atmosphere**.
+
 **Type:** Archivo (variable, used at `wdth` 92–125 for the wide display look) +
 Zen Kaku Gothic New for body and every Japanese glyph.
 

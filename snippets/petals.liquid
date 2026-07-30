@@ -1,7 +1,16 @@
 {%- comment -%}
   Sakura canvas. Fixed + pointer-events:none so it never repaints scrolling
   content. JS declines to start below 768px or under reduced-motion.
+
+  Colour and density come from theme settings — the petals are the one place
+  hue is allowed on an otherwise monochrome site.
 {%- endcomment -%}
 {%- if settings.enable_petals -%}
-  <canvas class="petals" data-petals aria-hidden="true"></canvas>
+  <canvas
+    class="petals"
+    data-petals
+    data-tint="{{ settings.petal_color | default: '#F7B9CE' }}"
+    data-count="{{ settings.petal_density | default: 26 }}"
+    aria-hidden="true"
+  ></canvas>
 {%- endif -%}

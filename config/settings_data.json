@@ -5,6 +5,8 @@
     "enable_intro": true,
     "social_instagram": "",
     "social_tiktok": "",
-    "social_pinterest": ""
+    "social_pinterest": "",
+    "petal_color": "#F7B9CE",
+    "petal_density": 26
   }
 }

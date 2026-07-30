@@ -42,8 +42,20 @@
   }
 
   /* ------------------------------------------------------------------------
-     Petals — sakura drifting on canvas.
-     Desktop only, pauses off-screen, dies on reduced-motion.
+     Petals — sakura on canvas.
+
+     Realism comes from four things, not from more petals:
+       1. True petal geometry, including the cleft notch at the tip.
+       2. Two-axis tumbling. A petal is a flat object, so rotating it about the
+          vertical axis squashes its width to zero (edge-on) and back out
+          negative (reverse face). Same for the horizontal axis. Multiplying
+          those two gives the fluttering flip real blossom has.
+       3. Face shading. Edge-on is dim, full-face is bright, so the tumble is
+          legible rather than just a wobble.
+       4. Shared wind. Every petal answers the same slow gust, so the field
+          moves as air rather than as unrelated sprites.
+
+     Desktop only, pauses when the tab hides, absent under reduced-motion.
      ------------------------------------------------------------------------ */
   function petals() {
     var canvas = $('[data-petals]');
@@ -56,7 +68,30 @@
     var h = 0;
     var running = true;
     var flock = [];
-    var COUNT = 18;
+    var clock = 0;
+
+    var COUNT = parseInt(canvas.dataset.count, 10) || 26;
+    var TINT = canvas.dataset.tint || '#F7B9CE';
+
+    /* -- colour ---------------------------------------------------------- */
+    function toRgb(hex) {
+      var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(String(hex).trim());
+      return m
+        ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)]
+        : [247, 185, 206];
+    }
+
+    // amount > 0 lifts toward white, < 0 sinks toward black.
+    function shade(c, amount) {
+      var t = amount < 0 ? 0 : 255;
+      var k = Math.abs(amount);
+      return 'rgb(' +
+        Math.round(c[0] + (t - c[0]) * k) + ',' +
+        Math.round(c[1] + (t - c[1]) * k) + ',' +
+        Math.round(c[2] + (t - c[2]) * k) + ')';
+    }
+
+    var base = toRgb(TINT);
 
     function size() {
       w = canvas.clientWidth;
@@ -66,27 +101,56 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
+    /* -- one petal ------------------------------------------------------- */
     function seed(initial) {
-      return {
-        x: Math.random() * w,
-        y: initial ? Math.random() * h : -20 - Math.random() * 120,
-        s: 5 + Math.random() * 7,
-        vy: 0.22 + Math.random() * 0.42,
-        drift: (Math.random() - 0.5) * 0.42,
-        phase: Math.random() * Math.PI * 2,
-        wobble: 0.006 + Math.random() * 0.012,
-        rot: Math.random() * Math.PI * 2,
-        vr: (Math.random() - 0.5) * 0.011,
-        a: 0.14 + Math.random() * 0.26
+      // depth 0 = far haze, 1 = close to the lens
+      var depth = Math.random();
+
+      var p = {
+        depth: depth,
+        s: 5 + depth * 11,
+        vy: 0.18 + depth * 0.55 + Math.random() * 0.15,
+        alpha: 0.3 + depth * 0.48,
+
+        sway: 0.35 + Math.random() * 0.95,
+        swayPhase: Math.random() * Math.PI * 2,
+        swaySpeed: 0.005 + Math.random() * 0.011,
+
+        spin: Math.random() * Math.PI * 2,
+        spinV: (Math.random() - 0.5) * 0.008,
+
+        tumble: Math.random() * Math.PI * 2,
+        tumbleV: (Math.random() - 0.5) * 0.026,
+
+        flutter: Math.random() * Math.PI * 2,
+        flutterV: (Math.random() - 0.5) * 0.038
       };
+
+      p.x = Math.random() * (w + 120) - 60;
+      p.y = initial ? Math.random() * h : -30 - Math.random() * 160;
+
+      // Gradient lives in the petal's own coordinates, so it is built once and
+      // carried through every transform instead of rebuilt each frame.
+      var g = ctx.createLinearGradient(0, p.s, 0, -p.s);
+      g.addColorStop(0, shade(base, -0.3));
+      g.addColorStop(0.45, shade(base, 0));
+      g.addColorStop(1, shade(base, 0.42));
+      p.grad = g;
+
+      return p;
     }
 
-    function shape(p) {
-      // A single sakura petal: notched tip, tapered base.
+    /* -- geometry: one sakura petal --------------------------------------
+       Canvas y grows downward, so +y is the base and -y is the tip.
+       Narrow rounded base, widest just past the middle, then two soft lobes
+       either side of the V cleft that makes a cherry petal recognisable.   */
+    function petalPath(s) {
       ctx.beginPath();
-      ctx.moveTo(0, -p.s);
-      ctx.bezierCurveTo(p.s * 0.62, -p.s * 0.55, p.s * 0.5, p.s * 0.52, 0, p.s * 0.82);
-      ctx.bezierCurveTo(-p.s * 0.5, p.s * 0.52, -p.s * 0.62, -p.s * 0.55, 0, -p.s);
+      ctx.moveTo(0, s * 0.92);
+      ctx.bezierCurveTo(-s * 0.52, s * 0.72, -s * 0.86, s * 0.02, -s * 0.6, -s * 0.62);
+      ctx.bezierCurveTo(-s * 0.46, -s * 0.92, -s * 0.16, -s * 0.96, 0, -s * 0.66);
+      ctx.bezierCurveTo(s * 0.16, -s * 0.96, s * 0.46, -s * 0.92, s * 0.6, -s * 0.62);
+      ctx.bezierCurveTo(s * 0.86, s * 0.02, s * 0.52, s * 0.72, 0, s * 0.92);
       ctx.closePath();
     }
 
@@ -94,33 +158,56 @@
       if (!running) return;
       ctx.clearRect(0, 0, w, h);
 
+      clock += 0.0016;
+      // Two detuned sines never repeat on a watchable timescale.
+      var wind = Math.sin(clock) * 0.34 + Math.sin(clock * 0.37 + 1.3) * 0.24;
+
       for (var i = 0; i < flock.length; i++) {
         var p = flock[i];
-        p.phase += p.wobble;
-        p.y += p.vy;
-        p.x += p.drift + Math.sin(p.phase) * 0.5;
-        p.rot += p.vr;
 
-        if (p.y > h + 30) flock[i] = seed(false);
-        if (p.x < -40) p.x = w + 30;
-        if (p.x > w + 40) p.x = -30;
+        p.swayPhase += p.swaySpeed;
+        p.y += p.vy;
+        p.x += Math.sin(p.swayPhase) * p.sway + wind * (0.4 + p.depth);
+        p.spin += p.spinV;
+        p.tumble += p.tumbleV;
+        p.flutter += p.flutterV;
+
+        if (p.y > h + 40) {
+          flock[i] = seed(false);
+          continue;
+        }
+        if (p.x < -70) p.x = w + 50;
+        if (p.x > w + 70) p.x = -50;
+
+        var fx = Math.cos(p.flutter);
+        var fy = Math.cos(p.tumble);
+
+        // A zero scale is a non-invertible matrix; hold a sliver of width so
+        // the edge-on frame stays a hairline instead of a warning.
+        if (fx > -0.05 && fx < 0.05) fx = fx < 0 ? -0.05 : 0.05;
+        if (fy > -0.05 && fy < 0.05) fy = fy < 0 ? -0.05 : 0.05;
+
+        // Edge-on catches less light than full face.
+        var face = 0.55 + 0.45 * Math.abs(fx * fy);
 
         ctx.save();
         ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        // Squash across the rotation axis so petals read as flat objects turning.
-        ctx.scale(1, 0.55 + Math.abs(Math.sin(p.phase)) * 0.45);
-        ctx.globalAlpha = p.a;
-        ctx.fillStyle = '#f4f2ed';
-        shape(p);
+        ctx.rotate(p.spin);
+        ctx.scale(fx, fy);
+        ctx.globalAlpha = p.alpha * face;
+        ctx.fillStyle = p.grad;
+        petalPath(p.s);
         ctx.fill();
         ctx.restore();
       }
+
       requestAnimationFrame(frame);
     }
 
     size();
     for (var i = 0; i < COUNT; i++) flock.push(seed(true));
+    // Far petals first so near ones layer over them.
+    flock.sort(function (a, b) { return a.depth - b.depth; });
     requestAnimationFrame(frame);
 
     var t;
